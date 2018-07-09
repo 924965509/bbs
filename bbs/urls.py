@@ -15,7 +15,18 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from blog import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+
+    url(r'^login/', views.login),
+    url(r'^reg/', views.register),
+    url(r'^index/', views.index),
+
+
+    url(r'^get_valid_img.png/', views.get_valid_img),
+
+    # 极验滑动验证码 获取验证码的url
+    url(r'^pc-geetest/register', views.get_geetest),
 ]
