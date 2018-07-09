@@ -21,7 +21,9 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     url(r'^login/', views.login),
+    url(r'^logout/', views.logout),
     url(r'^reg/', views.register),
+    url(r'^check_username_exist/', views.check_username_exist),
     url(r'^index/', views.index),
 
 

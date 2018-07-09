@@ -83,6 +83,9 @@ def login(request):
         return JsonResponse(ret)
     return render(request, "login2.html")
 
+def logout(request):
+    auth.logout(request)
+    return redirect("/index/")
 
 def index(request):
     return render(request, "index.html")
@@ -205,3 +208,13 @@ def register(request):
     form_obj = forms.RegForm()
     print(form_obj.fields)
     return render(request, "register.html", {"form_obj": form_obj})
+
+def check_username_exist(request):
+    ret = {"status":0,"msg":""}
+    username = request.GET.get("username")
+    is_exist = models.UserInfo.objects.filter(username=username)
+    if is_exist:
+        ret["status"] = 1
+        ret["msg"] = "用户名已经注册"
+    return JsonResponse(ret)
+

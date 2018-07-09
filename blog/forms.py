@@ -4,6 +4,7 @@ bbs用到的form类
 
 from django import forms
 from django.core.exceptions import ValidationError
+from blog import models
 
 # 定义一个注册的form类
 class RegForm(forms.Form):
@@ -18,6 +19,7 @@ class RegForm(forms.Form):
             attrs={"class": "form-control"},
         )
     )
+
 
     password = forms.CharField(
         min_length=6,
@@ -57,6 +59,23 @@ class RegForm(forms.Form):
         }
     )
 
+    #username钩子局部
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
+        is_exist = models.UserInfo.objects.filter(username=username)
+        if is_exist:
+            self.add_error("username",ValidationError("用户名已经存在"))
+        else:
+            return username
+
+    #email钩子
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        is_exist = models.UserInfo.objects.filter(email=email)
+        if is_exist:
+            self.add_error("email",ValidationError("邮箱已经注册"))
+        else:
+            return email
 
     # 重写全局的钩子函数，对确认密码做校验
     def clean(self):
