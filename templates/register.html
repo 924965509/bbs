@@ -76,16 +76,14 @@
 <script>
     // 找到头像的input标签绑定change事件
     $("#id_avatar").change(function () {
-        // 1. 创建一个读取文件的对象
         var fileReader = new FileReader();
-        // 取到当前选中的头像文件
-        // console.log(this.files[0]);
-        // 读取你选中的那个文件
-        fileReader.readAsDataURL(this.files[0]);  // 读取文件是需要时间的
-        fileReader.onload = function () {
-            // 2. 等上一步读完文件之后才 把图片加载到img标签中
-            $("#avatar-img").attr("src", fileReader.result);
-        };
+        {#console.log(this.files[0]);#}
+        fileReader.readAsDataURL(this.files[0]);
+        //等待上一步读完文件后才把图片加载到div中
+        fileReader.onload = function(){
+            $("#avatar-img").attr("src",fileReader.result)
+        }
+
     });
     // AJAX提交注册的数据
     $("#reg-submit").click(function () {
