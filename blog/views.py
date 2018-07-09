@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from django.contrib import auth
 from geetest import GeetestLib
 from blog import forms, models
+
+
 # Create your views here.
 
 # VALID_CODE = ""
@@ -83,12 +85,17 @@ def login(request):
         return JsonResponse(ret)
     return render(request, "login2.html")
 
+
 def logout(request):
     auth.logout(request)
     return redirect("/index/")
 
+
 def index(request):
-    return render(request, "index.html")
+    # 查询所有的文章列表
+    article_list = models.Article.objects.all()
+
+    return render(request, "index.html", {"article_list": article_list})
 
 
 # 获取验证码图片的视图
@@ -123,7 +130,7 @@ def get_valid_img(request):
 
         tmp = random.choice([u, l, n])
         tmp_list.append(tmp)
-        draw_obj.text((20+40*i, 0), tmp, fill=get_random_color(), font=font_obj)
+        draw_obj.text((20 + 40 * i, 0), tmp, fill=get_random_color(), font=font_obj)
 
     print("".join(tmp_list))
     print("生成的验证码".center(120, "="))
@@ -209,12 +216,12 @@ def register(request):
     print(form_obj.fields)
     return render(request, "register.html", {"form_obj": form_obj})
 
+
 def check_username_exist(request):
-    ret = {"status":0,"msg":""}
+    ret = {"status": 0, "msg": ""}
     username = request.GET.get("username")
     is_exist = models.UserInfo.objects.filter(username=username)
     if is_exist:
         ret["status"] = 1
         ret["msg"] = "用户名已经注册"
     return JsonResponse(ret)
-

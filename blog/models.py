@@ -22,7 +22,9 @@ class UserInfo(AbstractUser):
     def __str__(self):
         return self.username
 
-
+    class Meta:
+        verbose_name="用户"
+        verbose_name_plural = verbose_name
 class Blog(models.Model):
     """
     博客信息
@@ -35,6 +37,9 @@ class Blog(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name="blog站点"
+        verbose_name_plural = verbose_name
 
 class Category(models.Model):
     """
@@ -47,6 +52,9 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name="文章分类"
+        verbose_name_plural = verbose_name
 
 class Tag(models.Model):
     """
@@ -58,14 +66,16 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.title
-
+    class Meta:
+        verbose_name="文章分类"
+        verbose_name_plural = verbose_name
 
 class Article(models.Model):
     """
     文章
     """
     nid = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=50)  # 文章标题
+    title = models.CharField(max_length=50,verbose_name="文章标题" )  # 文章标题
     desc = models.CharField(max_length=255)  # 文章描述
     create_time = models.DateTimeField()  # 创建时间
 
@@ -80,6 +90,9 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name="文章"
+        verbose_name_plural = verbose_name
 
 class ArticleDetail(models.Model):
     """
@@ -89,7 +102,9 @@ class ArticleDetail(models.Model):
     content = models.TextField()
     article = models.OneToOneField(to="Article", to_field="nid")
 
-
+    class Meta:
+        verbose_name="文章详情"
+        verbose_name_plural = verbose_name
 class Article2Tag(models.Model):
     """
     文章和标签的多对多关系表
@@ -100,7 +115,8 @@ class Article2Tag(models.Model):
 
     class Meta:
         unique_together = (("article", "tag"),)
-
+        verbose_name = "文章-标签"
+        verbose_name_plural = verbose_name
 
 class ArticleUpDown(models.Model):
     """
@@ -113,6 +129,8 @@ class ArticleUpDown(models.Model):
 
     class Meta:
         unique_together = (("article", "user"),)
+        verbose_name = "文章点赞"
+        verbose_name_plural = verbose_name
 
 
 class Comment(models.Model):
@@ -124,7 +142,11 @@ class Comment(models.Model):
     user = models.ForeignKey(to="UserInfo", to_field="nid")
     content = models.CharField(max_length=255)  # 评论内容
     create_time = models.DateTimeField(auto_now_add=True)
-    parent_comment = models.ForeignKey("self", null=True)
+    parent_comment = models.ForeignKey("self", null=True,blank=True)
 
     def __str__(self):
         return self.content
+
+    class Meta:
+        verbose_name = "评论"
+        verbose_name_plural = verbose_name

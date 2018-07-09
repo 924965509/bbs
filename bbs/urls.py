@@ -16,7 +16,8 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from blog import views
-
+from django.views.static import serve
+from django.conf import settings
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
@@ -31,4 +32,6 @@ urlpatterns = [
 
     # 极验滑动验证码 获取验证码的url
     url(r'^pc-geetest/register', views.get_geetest),
+
+    url(r'^media/(?P<path>.*)$',serve,{"document_root":settings.MEDIA_ROOT})
 ]
