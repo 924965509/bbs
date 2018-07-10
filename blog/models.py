@@ -79,6 +79,13 @@ class Article(models.Model):
     desc = models.CharField(max_length=255)  # 文章描述
     create_time = models.DateTimeField()  # 创建时间
 
+    # 评论数
+    comment_count = models.IntegerField(verbose_name="评论数", default=0)
+    # 点赞数
+    up_count = models.IntegerField(verbose_name="点赞数", default=0)
+    # 踩
+    down_count = models.IntegerField(verbose_name="踩数", default=0)
+
     category = models.ForeignKey(to="Category", to_field="nid", null=True)
     user = models.ForeignKey(to="UserInfo", to_field="nid")
     tags = models.ManyToManyField(  # 中介模型
@@ -112,6 +119,9 @@ class Article2Tag(models.Model):
     nid = models.AutoField(primary_key=True)
     article = models.ForeignKey(to="Article", to_field="nid")
     tag = models.ForeignKey(to="Tag", to_field="nid")
+
+    def __str__(self):
+        return "{}-{}".format(self.article.title, self.tag.title)
 
     class Meta:
         unique_together = (("article", "tag"),)

@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.contrib import auth
 from geetest import GeetestLib
 from blog import forms, models
-
+from django.db.models import Count
 
 # Create your views here.
 
@@ -225,3 +225,30 @@ def check_username_exist(request):
         ret["status"] = 1
         ret["msg"] = "用户名已经注册"
     return JsonResponse(ret)
+
+
+def home(request,username):
+    print(username)
+    user = models.UserInfo.objects.filter(username=username).first()
+    if not user:
+        return HttpResponse("404")
+    #如果用户存在,就将他写的所有文章找出来
+    blog = user.blog
+
+    article_list = models.Article.objects.filter(user=user)
+    #我的文章分类及每个分类下文章数
+    #将我的文章按照我的分类分组,并统计出每个分类下面的文章数
+    # category_list = models.Category.objects.filter(blog=blog)
+    category_list = models.Category.objects.filter(blog=blog).annotate(c=Count("article")).values("title",'c')
+    #统计当前站点下有哪一些标签,并给按标签统计出文章数
+    tag_list = models.Tag.objects.filter(blog=blog).annotate(c=Count("article")).values('title',"c")
+
+    #按日期归档
+    archive_list = models.Article.objects.filter(user=user).extra(
+        select={"archive_ym": "date_format(create_time,'%%Y-%%m')"}
+    ).values("archive_ym").annotate(c=Count("nid")).values("archive_ym", "c")
+
+    return render(request,'home.html',{"blog":blog,"article_list":article_list,
+                                       "category_list":category_list,
+                                       "tag_list":tag_list,
+                                       "archive_list":archive_list})

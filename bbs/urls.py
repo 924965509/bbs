@@ -13,11 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url,include
 from django.contrib import admin
 from blog import views
 from django.views.static import serve
 from django.conf import settings
+from blog import urls as blog_urls
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
@@ -26,12 +27,13 @@ urlpatterns = [
     url(r'^reg/', views.register),
     url(r'^check_username_exist/', views.check_username_exist),
     url(r'^index/', views.index),
-
+    #将所有以blog开头的url都交给app下面的urls
+    url(r'^blog/',include(blog_urls)),
 
     url(r'^get_valid_img.png/', views.get_valid_img),
 
     # 极验滑动验证码 获取验证码的url
     url(r'^pc-geetest/register', views.get_geetest),
 
-    url(r'^media/(?P<path>.*)$',serve,{"document_root":settings.MEDIA_ROOT})
+    url(r'^media/(?P<path>.*)$',serve,{"document_root":settings.MEDIA_ROOT}),
 ]
