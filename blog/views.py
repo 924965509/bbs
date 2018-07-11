@@ -5,6 +5,7 @@ from geetest import GeetestLib
 from blog import forms, models
 from django.db.models import Count
 
+
 # Create your views here.
 
 # VALID_CODE = ""
@@ -227,28 +228,54 @@ def check_username_exist(request):
     return JsonResponse(ret)
 
 
-def home(request,username):
+def home(request, username):
     print(username)
     user = models.UserInfo.objects.filter(username=username).first()
     if not user:
         return HttpResponse("404")
-    #如果用户存在,就将他写的所有文章找出来
+    # 如果用户存在,就将他写的所有文章找出来
     blog = user.blog
 
     article_list = models.Article.objects.filter(user=user)
-    #我的文章分类及每个分类下文章数
-    #将我的文章按照我的分类分组,并统计出每个分类下面的文章数
+    # 我的文章分类及每个分类下文章数
+    # 将我的文章按照我的分类分组,并统计出每个分类下面的文章数
     # category_list = models.Category.objects.filter(blog=blog)
-    category_list = models.Category.objects.filter(blog=blog).annotate(c=Count("article")).values("title",'c')
-    #统计当前站点下有哪一些标签,并给按标签统计出文章数
-    tag_list = models.Tag.objects.filter(blog=blog).annotate(c=Count("article")).values('title',"c")
+    category_list = models.Category.objects.filter(blog=blog).annotate(c=Count("article")).values("title", 'c')
+    # 统计当前站点下有哪一些标签,并给按标签统计出文章数
+    tag_list = models.Tag.objects.filter(blog=blog).annotate(c=Count("article")).values('title', "c")
 
-    #按日期归档
+    # 按日期归档
     archive_list = models.Article.objects.filter(user=user).extra(
         select={"archive_ym": "date_format(create_time,'%%Y-%%m')"}
     ).values("archive_ym").annotate(c=Count("nid")).values("archive_ym", "c")
 
-    return render(request,'home.html',{"blog":blog,"article_list":article_list,
-                                       "category_list":category_list,
-                                       "tag_list":tag_list,
-                                       "archive_list":archive_list})
+    return render(request, 'home.html', {"blog": blog, "article_list": article_list,
+                                         "category_list": category_list,
+                                         "tag_list": tag_list,
+                                         "archive_list": archive_list,
+                                         "username": username,
+                                         })
+
+
+def article_detail(request,username, pk):
+    # print(pk)
+    # print(pk)
+    print(username)
+    user = models.UserInfo.objects.filter(username=username).first()
+    if not user:
+        return HttpResponse("404")
+    blog = user.blog
+    article_obj = models.Article.objects.filter(pk=pk).first()
+
+
+
+
+
+    return render(request,
+                  "article_detail.html",
+                  {
+                "username":username,
+                "article": article_obj,
+                "blog":blog,
+
+    })

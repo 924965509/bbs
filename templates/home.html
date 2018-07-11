@@ -1,58 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ blog.title }}的个人博客</title>
-    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/fontawesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/static/theme/{{ blog.theme }}">
-    <link rel="stylesheet" href="/static/mystyle.css">
+{% extends 'base.html' %}
 
-</head>
-<body>
+{% block page-main %}
 
 
-<div class="header">
-    <p>{{ blog.title }}</p>
-
-</div>
-
-<div class="container">
-    <div class="col-md-2">
-        <div class="panel panel-primary">
-            <div class="panel-heading">文章分类</div>
-            <div class="panel-body">
-                {% for category in category_list %}
-                    <p>{{ category.title }}({{ category.c }})</p>
-                {% endfor %}
-
-            </div>
-        </div>
-        <div class="panel panel-primary">
-            <div class="panel-heading">文章标签</div>
-            <div class="panel-body">
-                {% for tag in tag_list %}
-                    <p>{{ tag.title }}({{ tag.c }})</p>
-                {% endfor %}
-
-            </div>
-        </div>
-        <div class="panel panel-primary">
-            <div class="panel-heading">日期归档</div>
-            <div class="panel-body">
-                {% for archive in archive_list %}
-                    <p>{{ archive.archive_ym }}({{ archive.c }})</p>
-                {% endfor %}
-
-            </div>
-        </div>
-    </div>
-    <div class="col-md-8">
         <!-- 个人博客列表 开始-->
         <div class="article-list">
             {% for article in article_list %}
                 <div class="article">
-                    <p class="article-title"><a href="">{{ article.title }}</a></p>
+                    <p class="article-title"><a href="/blog/{{ article.user.username }}/p/{{ article.pk }}/">{{ article.title }}</a></p>
                     <div class="media">
                         <div class="media-left">
                             <a href="#">
@@ -79,12 +34,4 @@
             {% endfor %}
         </div>
 
-        <!-- 个人博客列表 结束-->
-
-    </div>
-</div>
-
-<script src="/static/jquery-3.3.1.js"></script>
-<script src="/static/bootstrap/js/bootstrap.min.js"></script>
-</body>
-</html>
+{% endblock %}
