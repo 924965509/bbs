@@ -3,9 +3,10 @@ from django.http import JsonResponse
 from django.contrib import auth
 from geetest import GeetestLib
 from blog import forms, models
+import logging
 from django.db.models import Count
 
-
+logger = logging.getLogger(__name__)
 # Create your views here.
 
 # VALID_CODE = ""
@@ -228,33 +229,58 @@ def check_username_exist(request):
     return JsonResponse(ret)
 
 
-def home(request, username):
+def home(request, username,*args):
+    logger.debug("home视图获取到用户名:{}".format(username))
+
     print(username)
     user = models.UserInfo.objects.filter(username=username).first()
     if not user:
         return HttpResponse("404")
     # 如果用户存在,就将他写的所有文章找出来
     blog = user.blog
-
-    article_list = models.Article.objects.filter(user=user)
+    if not args:
+        logger.debug("args没有接收到参数，默认走的是用户的个人博客页面！")
+        article_list = models.Article.objects.filter(user=user)
     # 我的文章分类及每个分类下文章数
     # 将我的文章按照我的分类分组,并统计出每个分类下面的文章数
     # category_list = models.Category.objects.filter(blog=blog)
-    category_list = models.Category.objects.filter(blog=blog).annotate(c=Count("article")).values("title", 'c')
-    # 统计当前站点下有哪一些标签,并给按标签统计出文章数
-    tag_list = models.Tag.objects.filter(blog=blog).annotate(c=Count("article")).values('title', "c")
-
-    # 按日期归档
-    archive_list = models.Article.objects.filter(user=user).extra(
-        select={"archive_ym": "date_format(create_time,'%%Y-%%m')"}
-    ).values("archive_ym").annotate(c=Count("nid")).values("archive_ym", "c")
-
-    return render(request, 'home.html', {"blog": blog, "article_list": article_list,
-                                         "category_list": category_list,
-                                         "tag_list": tag_list,
-                                         "archive_list": archive_list,
-                                         "username": username,
-                                         })
+    # category_list = models.Category.objects.filter(blog=blog).annotate(c=Count("article")).values("title", 'c')
+    # # 统计当前站点下有哪一些标签,并给按标签统计出文章数
+    # tag_list = models.Tag.objects.filter(blog=blog).annotate(c=Count("article")).values('title', "c")
+    #
+    # # 按日期归档
+    # archive_list = models.Article.objects.filter(user=user).extra(
+    #     select={"archive_ym": "date_format(create_time,'%%Y-%%m')"}
+    # ).values("archive_ym").annotate(c=Count("nid")).values("archive_ym", "c")
+    else:
+        logger.debug(args)
+        logger.debug("------------------------------")
+        # 表示按照文章的分类或tag或日期归档来查询
+        # args = ("category", "技术")
+        # article_list = models.Article.objects.filter(user=user).filter(category__title="技术")
+        if args[0] == "category":
+            article_list = models.Article.objects.filter(user=user).filter(category__title=args[1])
+        elif args[0] == "tag":
+            article_list = models.Article.objects.filter(user=user).filter(tags__title=args[1])
+        else:
+            # 按照日期归档
+            try:
+                year, month = args[1].split("-")
+                logger.debug("分割得到参数year:{}, month:{}".format(year, month))
+                # logger_s10.info("得到年和月的参数啦！！！！")
+                logger.debug("************************")
+                article_list = models.Article.objects.filter(user=user).filter(
+                    create_time__year=year, create_time__month=month
+                )
+            except Exception as e:
+                logger.warning("请求访问的日期归档格式不正确！！！")
+                logger.warning((str(e)))
+                return HttpResponse("404")
+    return render(request, "home.html", {
+        "username": username,
+        "blog": blog,
+        "article_list": article_list,
+    })
 
 
 def article_detail(request,username, pk):
@@ -279,3 +305,25 @@ def article_detail(request,username, pk):
                 "blog":blog,
 
     })
+
+import json
+from django.db.models import F
+
+def up_down(request):
+    print(request.POST)
+    article_id = request.POST.get("article_id")
+    is_up = json.loads(request.POST.get("is_up"))
+    user = request.user
+    response = {"state":True}
+
+    try:
+        models.ArticleUpDown.objects.create(user=user,article_id=article_id,is_up=is_up)
+        models.Article.objects.filter(pk=article_id).update(up_count=F("up_count")+1)
+    except Exception as e:
+        response["state"]=False
+        is_up=models.ArticleUpDown.objects.filter(user=user,article_id=article_id).first().is_up
+        response["is_up"] = is_up
+        print(is_up)
+    return JsonResponse(response)
+
+

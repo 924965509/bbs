@@ -20,7 +20,7 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="bbs@www.cjkk4.top" uuid="62860659-5cda-4fe9-8eda-72689f4e4730">
+    <data-source source="LOCAL" name="bbs@www.cjkk4.top" uuid="e5d8231f-9e62-4702-9263-0d2938418246">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
