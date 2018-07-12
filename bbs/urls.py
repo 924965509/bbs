@@ -36,4 +36,7 @@ urlpatterns = [
     url(r'^pc-geetest/register', views.get_geetest),
 
     url(r'^media/(?P<path>.*)$',serve,{"document_root":settings.MEDIA_ROOT}),
+    url(r'^upload/', views.upload),
+
+    url(r'^$', views.index)
 ]
