@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ blog.title }}的个人博客</title>
+
+
+
+
     <script src="/static/jquery-3.3.1.js"></script>
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/fontawesome/css/font-awesome.min.css">
@@ -14,7 +18,33 @@
 
 
 <div class="header">
-    <p>{{ blog.title }}</p>
+    <a href="/blog/{{ request.user.username }}/"><p style="margin: 0 auto;padding: 0;color: white;">{{ blog.title }}</p></a>
+        <div id="navigator">
+
+        <ul id="navList">
+            <li><a id="blog_nav_sitehome" class="menu" href="/">博客园</a></li>
+            <li><a id="blog_nav_myhome" class="menu" href="/blog/{{ request.user.username }}/">首页</a></li>
+            <li><a id="blog_nav_newpost" class="menu" rel="nofollow" href="/blog/backend/add_article/">新随笔</a>
+            </li>
+{#            <li><a id="blog_nav_contact" class="menu" rel="nofollow"#}
+{#                   href="">联系</a>#}
+{#            </li>#}
+{#            <li><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/jixiaoleng4/rss">订阅</a>#}
+{#                <!--<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/jixiaoleng4/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>-->#}
+{#            </li>#}
+            <li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+        </ul>
+        <div class="blogStats">
+
+            <div id="blog_stats">
+                <span id="stats_post_count">随笔 - 未完善&nbsp; </span>
+
+                <span id="stats-comment_count">评论 - 999</span>
+            </div>
+
+        </div><!--end: blogStats -->
+    </div>
+
 
 </div>
 

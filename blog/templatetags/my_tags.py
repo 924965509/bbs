@@ -1,8 +1,9 @@
 from django import template
-from django.db.models import Count
 from blog import models
+from django.db.models import Count
 
 register = template.Library()
+
 
 @register.inclusion_tag("left_menu.html")
 def get_left_menu(username):
@@ -24,4 +25,3 @@ def get_left_menu(username):
         "tag_list": tag_list,
         "archive_list": archive_list
     }
-

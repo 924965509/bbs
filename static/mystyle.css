@@ -116,3 +116,125 @@ input.author {
 .comment_tree .comment_item{
     margin-left: 20px;
 }
+
+
+#EntryTag {
+	margin-top: 20px;
+	font-size: 9pt;
+	color: gray;
+}
+.topicListFooter {
+	text-align: right;
+	margin-right: 10px;
+	margin-top: 10px;
+}
+#divRefreshComments{
+	text-align: right;
+	margin-right: 10px;
+	margin-bottom: 5px;
+	font-size: 9pt;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+html {
+	height: 100%;
+}
+body {
+	color: #000;
+
+    font-family: Verdana,Arial,Helvetica,sans-serif;
+	font-size:14px;
+	min-height: 101%;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+fieldset, img {
+	border: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-size: 100%;
+	font-weight: normal;
+}
+a:link {
+
+	text-decoration: none;
+}
+a:visited {
+
+	text-decoration: none;
+}
+a:hover {
+	color: #F60;
+	text-decoration: underline;
+}
+a:active {
+	color: black;
+	text-decoration: none;
+}
+
+#home {
+	margin: 0 auto;
+}
+
+#blogTitle {
+	height:70px;background: #fff;
+	clear: both;
+}
+#blogTitle h1 {
+	font-size: 150%;
+	font-weight: bold;
+	line-height: 1.5;
+	margin-left: 1em;
+	margin-top: 10px;
+	width: 50%;
+	float: left;
+}
+#blogTitle h2 {
+	margin-left: 4em;
+	line-height: 1.5;
+	width: 50%;
+	float: left;
+}
+#blogLogo {
+	float: right;
+}
+#navigator {
+	background-color: black;
+	height: 60px;line-height: 60px;overflow: hidden;
+	clear: both;
+}
+#navList {
+	min-height: 30px;
+	float: left;
+}
+#navList li {
+	float: left;
+}
+#navList a {
+	display: block;
+	padding:0 1.5em;height: 60px;font-family:'微软雅黑';
+	float: left;font-size: 1.2em;
+	text-align: center;transition-duration:0.3s;
+}
+#navList a:link, #navList a:visited, #navList a:active {
+	color: #bbb;
+}
+#navList a:hover {
+	color: white;
+	background-color: #343434;
+	text-decoration: none;text-shadow: 0px 0px 1px #000;
+}
+#navList a.aHeaderXML{padding-top: 25px;overflow: hidden;}
+#navList a.aHeaderXML img{vertical-align:middle;}
+
+.blogStats {
+	float: right;
+	color: #ccc;padding-right: 10px;
+	text-align: right;
+}
